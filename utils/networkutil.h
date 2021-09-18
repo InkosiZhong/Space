@@ -50,7 +50,7 @@ private slots:
     void onConnStateChanged(bool);
 
 private:
-    bool m_conn;
+    bool m_conn = false;
     Worker* m_worker;
 
 signals:

@@ -412,8 +412,6 @@ void MainWindow::onFinishCapture(DataPackage* data){
         m_net_util = new Util::NetworkUtil();
         connect(m_net_util, SIGNAL(signalConnStateChanged(bool)), this, SLOT(onSetFunctionActive(bool)));
     }
-    onSetFunctionActive(GetFormula);
-    onSetFunctionActive(GetOCR);
     m_prompt->hidePrompt();
     if (data){
         QRect screen = QGuiApplication::screens().at(data->screen_id)->geometry();

@@ -26,10 +26,10 @@ bool Util::NetworkUtil::isConnecting(){
 }
 
 void Util::NetworkUtil::onConnStateChanged(bool connecting){
-    if (m_conn == !connecting){
+    if (m_conn != connecting){
+        m_conn = connecting;
         emit signalConnStateChanged(connecting);
     }
-    m_conn = connecting;
 }
 
 Util::Worker::Worker(QString host, long timeout, long cycle_t):

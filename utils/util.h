@@ -7,8 +7,6 @@
 #include <atlimage.h>
 #endif
 
-#include <QNetworkConfigurationManager>
-
 namespace Util{
 
 namespace Util{
