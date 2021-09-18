@@ -14,17 +14,19 @@ class Worker: public QObject
     Q_OBJECT
 public:
     Worker(QString host = "https://www.baidu.com", long timeout = 1, long cycle_t = 3);
+    void stopCheckHostOnline();
 
 public slots:
     void onCheckHostOnline();
 
 signals:
-    void signalConnStateChanged(bool);
+    void signalConnState(bool);
 
 private:
     QString m_host;
     long m_timeout = 1;
     long m_cycle_t = 3;
+    bool m_checking = true;
 };
 
 class NetworkUtil : public QObject

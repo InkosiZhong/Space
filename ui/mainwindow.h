@@ -111,6 +111,6 @@ private:
     QxtGlobalShortcut* m_shortcut;
     int m_format = WIN32_CF_BID;
     bool m_save = false, m_origin = false;
-    Util::NetworkUtil m_net_util;
+    Util::NetworkUtil* m_net_util = NULL;
 };
 #endif // MAINWINDOW_H

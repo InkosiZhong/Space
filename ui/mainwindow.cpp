@@ -200,7 +200,6 @@ void MainWindow::initModules(){
     connect(m_module_dock, SIGNAL(signalSendMap(QPixmap*)), this, SLOT(onReceiveMap(QPixmap*)));
     connect(m_module_dock, SIGNAL(signalSendFormula(LatexInfoPack*)), this, SLOT(onReceiveFormula(LatexInfoPack*)));
     connect(m_module_dock, SIGNAL(signalSendOCR(OCRInfoPack*)), this, SLOT(onReceiveOCR(OCRInfoPack*)));
-    connect(&m_net_util, SIGNAL(signalConnStateChanged(bool)), this, SLOT(onSetFunctionActive(bool)));
 }
 
 void MainWindow::screenCapture(){
@@ -228,7 +227,7 @@ void MainWindow::activeSettingsWindow(){
 }
 
 void MainWindow::setFunctionActive(int op){
-    bool active = m_module_dock->operationAvailable(op) && m_net_util.isConnecting();
+    bool active = m_module_dock->operationAvailable(op) && m_net_util->isConnecting();
     switch(op){
     case GetOCR:
         m_ui->ocr_button->setEnabled(active);
@@ -366,7 +365,7 @@ void MainWindow::onReceiveFormula(LatexInfoPack* latex){
             m_prompt->setPrompt(latex->m_msg+ " (Mathpix)", Lv_ERROR, this);
         }
         else{
-            if (m_net_util.isConnecting()){
+            if (m_net_util->isConnecting()){
                 m_prompt->setPrompt("Failed to detect formula in the area!", Lv_WARNING, this);
             } else {
                 m_prompt->setPrompt("check your network connection!", Lv_ERROR, this);
@@ -378,7 +377,7 @@ void MainWindow::onReceiveFormula(LatexInfoPack* latex){
 void MainWindow::onReceiveOCR(OCRInfoPack* ocr){
     if (!ocr)return;
     if (ocr->ocr_result.empty()){
-        if (m_net_util.isConnecting()){
+        if (m_net_util->isConnecting()){
             m_prompt->setPrompt("OCR return nothing!", Lv_WARNING, this);
         } else {
             m_prompt->setPrompt("check your network connection!", Lv_ERROR, this);
@@ -409,6 +408,10 @@ void MainWindow::onCaptureCompleted(bool save, bool origin){
 }
 
 void MainWindow::onFinishCapture(DataPackage* data){
+    if (!m_net_util){
+        m_net_util = new Util::NetworkUtil();
+        connect(m_net_util, SIGNAL(signalConnStateChanged(bool)), this, SLOT(onSetFunctionActive(bool)));
+    }
     onSetFunctionActive(GetFormula);
     onSetFunctionActive(GetOCR);
     m_prompt->hidePrompt();
@@ -447,6 +450,10 @@ void MainWindow::onExitCapture(){
     if (m_capturer){
         m_capturer->close();
         m_capturer = NULL;
+    }
+    if (m_net_util){
+        m_net_util->deleteLater();
+        m_net_util = NULL;
     }
     emit signalDockOperation(Clean);
 }
