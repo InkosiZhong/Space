@@ -1,0 +1,12 @@
+STXINGKA.TTF
+SourceHanSans.ttc
+SourceHanSerif.ttc
+msyh.ttc
+msyhl.ttc
+msyhhv.ttc
+msyhsb.ttc
+msyhsl.ttc
+msyhbd.ttc
+STKAITI.TTF
+STLITI.TTF
+STXINWEI.TTF

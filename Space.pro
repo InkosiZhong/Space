@@ -73,7 +73,7 @@ win32:{
 INCLUDEPATH += ../opencv/include \
                ../opencv/include/opencv2
 
-LIBS += ../opencv/x64/vc15/lib/opencv_world452d.lib
+LIBS += ../opencv/x64/vc15/lib/opencv_world452.lib
 LIBS += User32.LIB
 }
 
