@@ -46,7 +46,6 @@ class TextDrawer:
                     text = self.read_random_words(f)
                     if not text:
                         break
-                    print(text)
                     text, w, h = self.text2para(text)
                     k = random.randint(12, 18)
                     im = Image.new('L', (int((1.1 * w) * k), int((1.6 * h) * k)), 255)
