@@ -29,6 +29,7 @@ void SettingsForm::initConfig(){
 
     /*General*/
     m_xml_controller.append("Config.General.ClipFormat", "0");
+    m_xml_controller.append("Config.General.SmartSpace", QString::number(SPACE_AI));
 
     /*Advance*/
     m_xml_controller.append("Config.Advance.LuminanceThreshold", "127");
@@ -41,8 +42,8 @@ void SettingsForm::initConfig(){
 
     /*HotKey*/
     m_xml_controller.append("Config.HotKey.ScreenShot", "Ctrl+Shift+A");
-    m_xml_controller.append("Config.HotKey.Src", "Return");
-    m_xml_controller.append("Config.HotKey.Clip", "Space");
+    m_xml_controller.append("Config.HotKey.Src", EMPTY_STRING);
+    m_xml_controller.append("Config.HotKey.Clip", "Return");
     m_xml_controller.append("Config.HotKey.Cancel", "Esc");
     m_xml_controller.append("Config.HotKey.Save", "Ctrl+S");
 
@@ -61,9 +62,9 @@ void SettingsForm::loadConfig(){
 #if WIN32
     val = m_xml_controller.get("Config.General.ClipFormat");
     switch(val.toInt()){
-    case WIN32_CF_BID: { m_ui->xmind_radiobutton->setChecked(true); break; }
-    case WIN32_PNG: { m_ui->office_radiobutton->setChecked(true); break; }
-    case WIN32_FILE: { m_ui->png_radiobutton->setChecked(true); break; }
+    case WIN32_CF_BID: m_ui->xmind_radiobutton->setChecked(true); break;
+    case WIN32_PNG: m_ui->office_radiobutton->setChecked(true); break;
+    case WIN32_FILE: m_ui->png_radiobutton->setChecked(true); break;
     default: break;
     }
 #elif __APPLE__
@@ -71,6 +72,13 @@ void SettingsForm::loadConfig(){
     m_ui->office_radiobutton->setEnabled(false);
     m_ui->png_radiobutton->setEnabled(false);
 #endif
+    val = m_xml_controller.get("Config.General.SmartSpace");
+    switch(val.toInt()){
+    case SPACE_DISBALE: m_ui->space_disable_radioButton->setChecked(true); break;
+    case SPACE_AI: m_ui->space_ai_radioButton->setChecked(true); break;
+    case SPACE_IMITATE: m_ui->space_imitate_radioButton->setChecked(true); break;
+    }
+
     /*Advance*/
     val = m_xml_controller.get("Config.Advance.LuminanceThreshold");
     m_ui->lu_threshold_edit->setText(val);
@@ -114,6 +122,10 @@ void SettingsForm::saveGeneralConfig(){
     else if (m_ui->png_radiobutton->isChecked())format = WIN32_FILE;
     m_xml_controller.set("Config.General.ClipFormat", QString::number(format));
 #endif
+    if (m_ui->space_disable_radioButton->isChecked())format = SPACE_DISBALE;
+    else if (m_ui->space_ai_radioButton->isChecked())format = SPACE_AI;
+    else if (m_ui->space_imitate_radioButton->isChecked())format = SPACE_IMITATE;
+    m_xml_controller.set("Config.General.SmartSpace", QString::number(format));
     save2File();
 }
 
@@ -131,11 +143,16 @@ void SettingsForm::saveAdvanceConfig(){
 }
 
 void SettingsForm::saveHotKeyConfig(){
-    m_xml_controller.set("Config.HotKey.ScreenShot", m_ui->screenshot_edit->keySequence().toString());
-    m_xml_controller.set("Config.HotKey.Src", m_ui->src_edit->keySequence().toString());
-    m_xml_controller.set("Config.HotKey.Clip", m_ui->clip_edit->keySequence().toString());
-    m_xml_controller.set("Config.HotKey.Cancel", m_ui->cancel_edit->keySequence().toString());
-    m_xml_controller.set("Config.HotKey.Save", m_ui->save_edit->keySequence().toString());
+    QString val = m_ui->screenshot_edit->keySequence().toString();
+    m_xml_controller.set("Config.HotKey.ScreenShot", val == "" ? EMPTY_STRING : val);
+    val = m_ui->src_edit->keySequence().toString();
+    m_xml_controller.set("Config.HotKey.Src", val == "" ? EMPTY_STRING : val);
+    val = m_ui->clip_edit->keySequence().toString();
+    m_xml_controller.set("Config.HotKey.Clip", val == "" ? EMPTY_STRING : val);
+    val = m_ui->cancel_edit->keySequence().toString();
+    m_xml_controller.set("Config.HotKey.Cancel", val == "" ? EMPTY_STRING : val);
+    val = m_ui->save_edit->keySequence().toString();
+    m_xml_controller.set("Config.HotKey.Save", val == "" ? EMPTY_STRING : val);
     save2File();
 }
 

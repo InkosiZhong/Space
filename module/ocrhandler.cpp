@@ -10,7 +10,7 @@ OCRWords::OCRWords(QString wd, int t, int l, int w, int h){
 
 OCRInfoPack::OCRInfoPack(){}
 
-OCRInfoPack::OCRInfoPack(const Json::Value& root){
+OCRInfoPack::OCRInfoPack(const Json::Value& root, QPixmap* pixmap){
     int num = root["words_result_num"].asInt();
     for (int i = 0; i < num; i++){
         Json::Value val = root["words_result"][i];
@@ -24,6 +24,7 @@ OCRInfoPack::OCRInfoPack(const Json::Value& root){
         };
         ocr_result.push_back(ocr_words);
     }
+    src = pixmap;
 }
 
 OCRHandler::OCRHandler(const QString& app_token){
@@ -39,7 +40,7 @@ OCRInfoPack OCRHandler::handle(QPixmap& pixmap){
     std::string ret = Util::CurlUtil::post(url, m_app_token.toStdString(), pixmap);
     Util::JsonUtil json_util(ret);
     const Json::Value& root = json_util.getJson();
-    return OCRInfoPack(root);
+    return OCRInfoPack(root, &pixmap);
 }
 
 void OCRHandler::setAppToken(const QString& app_token){

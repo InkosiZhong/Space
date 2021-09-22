@@ -33,29 +33,15 @@ void ModuleDock::onSetSrc(QPixmap* src){
     m_history_stack.push(Utils::CvtFormatUtil::Mat2QPixmap(wo_bg));
 }
 
-void ModuleDock::onOperation(int op){
+void ModuleDock::onOperation(Operations op){
     switch(op){
-    case GetSrc:
-        getSrc();
-        break;
-    case GetOperated:
-        getOperated();
-        break;
-    case RollBack:
-        rollBackOperation();
-        break;
-    case ClearAll:
-        clearAllOperation();
-        break;
-    case Clean:
-        clean();
-        break;
-    case GetFormula:
-        getFormula();
-        break;
-    case GetOCR:
-        getOCR();
-        break;
+    case GetSrc: getSrc(); break;
+    case GetOperated: getOperated(); break;
+    case RollBack: rollBackOperation(); break;
+    case ClearAll: clearAllOperation(); break;
+    case Clean: clean(); break;
+    case GetFormula: getFormula(); break;
+    case GetOCR: getOCR(); break;
     }
 }
 
@@ -71,18 +57,11 @@ bool ModuleDock::operationAvailable(int op){
 }
 
 QPixmap* ModuleDock::getSrc(){
-    QPixmap* pixmap = getStaticSrc();
-    if (pixmap){
-        emit signalSendMap(&m_history_stack.top());
-    }
-    return pixmap;
-}
-
-QPixmap* ModuleDock::getStaticSrc(){
     if (m_history_stack.empty())return NULL;
     while (m_history_stack.size() > 1){
         m_history_stack.pop();
     }
+    emit signalSendMap(&m_history_stack.top());
     return &m_history_stack.top();
 }
 

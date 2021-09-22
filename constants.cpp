@@ -57,5 +57,9 @@ enum ClipboardFormat;
 #endif
 
 enum Operations;
+Q_DECLARE_METATYPE(Operations);
 
 enum PromptLevel;
+
+enum SmartSpaceMode;
+Q_DECLARE_METATYPE(SmartSpaceMode);

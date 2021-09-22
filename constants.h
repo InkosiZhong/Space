@@ -3,6 +3,7 @@
 
 #include <QString>
 #include <QColor>
+#include <QMetaType>
 
 extern const short LEFT, RIGHT, TOP, BOTTOM;
 extern const int STRETCH_DIAMETER;
@@ -81,6 +82,12 @@ enum PromptLevel {
     Lv_WARNING,
     Lv_ERROR,
     Lv_NONE
+};
+
+enum SmartSpaceMode {
+    SPACE_DISBALE,
+    SPACE_AI,
+    SPACE_IMITATE
 };
 
 

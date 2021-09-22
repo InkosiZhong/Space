@@ -11,15 +11,15 @@ bool section(OCRWords* last, OCRWords* now, int width){
            now->top - last_btm > last->height * 0.8;                // 本行顶部到上一行底部距离大于上一行行高的80%
 }
 
-ExhibitForm::ExhibitForm(QPixmap* pixmap, OCRInfoPack* ocr_pack):
+ExhibitForm::ExhibitForm(OCRInfoPack* ocr_pack):
     m_ui(new Ui::ExhibitForm)
 {
     m_ui->setupUi(this);
     float scale = Util::Util::windowsDpiScale();
-    if (pixmap){
-        m_width = pixmap->width();
-        setFixedSize(pixmap->width() / scale + 18, pixmap->height() / scale + 48);
-        m_ui->label->setPixmap(*pixmap);
+    if (ocr_pack->src){
+        m_width = ocr_pack->src->width();
+        setFixedSize(ocr_pack->src->width() / scale + 18, ocr_pack->src->height() / scale + 48);
+        m_ui->label->setPixmap(*ocr_pack->src);
     }
     if (ocr_pack){
         std::list<OCRWords>::iterator iter = ocr_pack->ocr_result.begin();

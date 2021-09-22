@@ -20,7 +20,7 @@ class ExhibitForm : public QMainWindow
     Q_OBJECT
 
 public:
-    explicit ExhibitForm(QPixmap* pixmap = NULL, OCRInfoPack* ocr_pack = NULL);
+    explicit ExhibitForm(OCRInfoPack* ocr_pack = NULL);
 
     ~ExhibitForm();
 

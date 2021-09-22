@@ -28,13 +28,13 @@
    <item>
     <widget class="QTabWidget" name="setting_tabs">
      <property name="currentIndex">
-      <number>3</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="general_tab">
       <attribute name="title">
        <string>常规</string>
       </attribute>
-      <layout class="QVBoxLayout" name="verticalLayout_4" stretch="1,1,1,0">
+      <layout class="QVBoxLayout" name="verticalLayout_4" stretch="0,0,1,0">
        <property name="leftMargin">
         <number>30</number>
        </property>
@@ -48,69 +48,123 @@
         <number>30</number>
        </property>
        <item>
-        <layout class="QHBoxLayout" name="horizontalLayout_10">
-         <item>
-          <widget class="QLabel" name="label_10">
-           <property name="minimumSize">
-            <size>
-             <width>100</width>
-             <height>0</height>
-            </size>
-           </property>
-           <property name="text">
-            <string>格式</string>
-           </property>
-           <property name="alignment">
-            <set>Qt::AlignCenter</set>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QRadioButton" name="xmind_radiobutton">
-           <property name="text">
-            <string>XMind</string>
-           </property>
-           <property name="icon">
-            <iconset resource="../res.qrc">
-             <normaloff>:/icon/res/settings_icon/xmind.png</normaloff>:/icon/res/settings_icon/xmind.png</iconset>
-           </property>
-           <property name="checked">
-            <bool>true</bool>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QRadioButton" name="office_radiobutton">
-           <property name="text">
-            <string>Office</string>
-           </property>
-           <property name="icon">
-            <iconset resource="../res.qrc">
-             <normaloff>:/icon/res/settings_icon/office.png</normaloff>:/icon/res/settings_icon/office.png</iconset>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QRadioButton" name="png_radiobutton">
-           <property name="text">
-            <string>PNG</string>
-           </property>
-           <property name="icon">
-            <iconset resource="../res.qrc">
-             <normaloff>:/icon/res/settings_icon/PNG.png</normaloff>:/icon/res/settings_icon/PNG.png</iconset>
-           </property>
-           <property name="iconSize">
-            <size>
-             <width>16</width>
-             <height>16</height>
-            </size>
-           </property>
-          </widget>
-         </item>
-        </layout>
+        <widget class="QGroupBox" name="groupBox_5">
+         <property name="title">
+          <string>AISpace：直达您的期待</string>
+         </property>
+         <layout class="QHBoxLayout" name="horizontalLayout_10" stretch="0,1,1,1">
+          <item>
+           <spacer name="horizontalSpacer_4">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item>
+           <widget class="QRadioButton" name="space_ai_radioButton">
+            <property name="text">
+             <string>智能分析</string>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QRadioButton" name="space_imitate_radioButton">
+            <property name="text">
+             <string>模仿操作</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QRadioButton" name="space_disable_radioButton">
+            <property name="text">
+             <string>禁用</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
        </item>
        <item>
-        <layout class="QHBoxLayout" name="horizontalLayout_12"/>
+        <widget class="QGroupBox" name="groupBox_4">
+         <property name="title">
+          <string>剪切板格式</string>
+         </property>
+         <layout class="QHBoxLayout" name="horizontalLayout_20" stretch="0,1,1,1">
+          <item>
+           <spacer name="horizontalSpacer_3">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item>
+           <widget class="QRadioButton" name="xmind_radiobutton">
+            <property name="layoutDirection">
+             <enum>Qt::LeftToRight</enum>
+            </property>
+            <property name="text">
+             <string>XMind</string>
+            </property>
+            <property name="icon">
+             <iconset resource="../res.qrc">
+              <normaloff>:/icon/res/settings_icon/xmind.png</normaloff>:/icon/res/settings_icon/xmind.png</iconset>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QRadioButton" name="office_radiobutton">
+            <property name="layoutDirection">
+             <enum>Qt::LeftToRight</enum>
+            </property>
+            <property name="text">
+             <string>Office</string>
+            </property>
+            <property name="icon">
+             <iconset resource="../res.qrc">
+              <normaloff>:/icon/res/settings_icon/office.png</normaloff>:/icon/res/settings_icon/office.png</iconset>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QRadioButton" name="png_radiobutton">
+            <property name="layoutDirection">
+             <enum>Qt::LeftToRight</enum>
+            </property>
+            <property name="text">
+             <string>PNG</string>
+            </property>
+            <property name="icon">
+             <iconset resource="../res.qrc">
+              <normaloff>:/icon/res/settings_icon/PNG.png</normaloff>:/icon/res/settings_icon/PNG.png</iconset>
+            </property>
+            <property name="iconSize">
+             <size>
+              <width>16</width>
+              <height>16</height>
+             </size>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
        </item>
        <item>
         <layout class="QHBoxLayout" name="horizontalLayout_13"/>

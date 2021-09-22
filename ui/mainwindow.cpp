@@ -50,6 +50,7 @@ void MainWindow::initConfig(){
 
     /*General*/
     m_xml_controller.append("Config.General.ClipFormat", "0");
+    m_xml_controller.append("Config.General.SmartSpace", QString::number(SPACE_AI));
 
     /*Advance*/
     m_xml_controller.append("Config.Advance.LuminanceThreshold", "127");
@@ -62,8 +63,8 @@ void MainWindow::initConfig(){
 
     /*HotKey*/
     m_xml_controller.append("Config.HotKey.ScreenShot", "Ctrl+Shift+A");
-    m_xml_controller.append("Config.HotKey.Src", "Return");
-    m_xml_controller.append("Config.HotKey.Clip", "Space");
+    m_xml_controller.append("Config.HotKey.Src", EMPTY_STRING);
+    m_xml_controller.append("Config.HotKey.Clip", "Return");
     m_xml_controller.append("Config.HotKey.Cancel", "Esc");
     m_xml_controller.append("Config.HotKey.Save", "Ctrl+S");
 
@@ -156,6 +157,8 @@ void MainWindow::loadConfig(){
 void MainWindow::setupGeneralConfig(){
     QString val = m_xml_controller.get("Config.General.ClipFormat");
     m_format = val.toInt();
+    val = m_xml_controller.get("Config.General.SmartSpace");
+    m_smart_space.setMode(SmartSpaceMode(val.toInt()));
 }
 
 void MainWindow::setupAdvanceConfig(){
@@ -183,23 +186,27 @@ void MainWindow::setupHotKeyConfig(){
         [=]() {screenCapture();});
 
     val = m_xml_controller.get("Config.HotKey.Src");
-    m_ui->source_button->setShortcut(QKeySequence(val));
+    m_ui->source_button->setShortcut(QKeySequence(val == EMPTY_STRING ? "" : val));
     val = m_xml_controller.get("Config.HotKey.Clip");
-    m_ui->copy_button->setShortcut(QKeySequence(val));
+    m_ui->copy_button->setShortcut(QKeySequence(val == EMPTY_STRING ? "" : val));
     val = m_xml_controller.get("Config.HotKey.Cancel");
-    m_ui->exit_button->setShortcut(QKeySequence(val));
+    m_ui->exit_button->setShortcut(QKeySequence(val == EMPTY_STRING ? "" : val));
     val = m_xml_controller.get("Config.HotKey.Save");
-    m_ui->save_button->setShortcut(QKeySequence(val));
+    m_ui->save_button->setShortcut(QKeySequence(val == EMPTY_STRING ? "" : val));
 }
 
 void MainWindow::initModules(){
     m_module_dock->moveToThread(&dockThread);
     connect(this, SIGNAL(signalSetSrc(QPixmap*)), m_module_dock, SLOT(onSetSrc(QPixmap*)));
     connect(&dockThread, &QThread::finished, m_module_dock, &QObject::deleteLater);
-    connect(this, SIGNAL(signalDockOperation(int)), m_module_dock, SLOT(onOperation(int)));
+    qRegisterMetaType<Operations>("Operations");
+    connect(this, SIGNAL(signalDockOperation(Operations)), m_module_dock, SLOT(onOperation(Operations)));
     connect(m_module_dock, SIGNAL(signalSendMap(QPixmap*)), this, SLOT(onReceiveMap(QPixmap*)));
     connect(m_module_dock, SIGNAL(signalSendFormula(LatexInfoPack*)), this, SLOT(onReceiveFormula(LatexInfoPack*)));
     connect(m_module_dock, SIGNAL(signalSendOCR(OCRInfoPack*)), this, SLOT(onReceiveOCR(OCRInfoPack*)));
+
+    m_smart_space.setModuleDock(m_module_dock);
+    connect(this, SIGNAL(signalDockOperation(Operations)), &m_smart_space, SLOT(onOperation(Operations)));
 }
 
 void MainWindow::screenCapture(){
@@ -393,7 +400,7 @@ void MainWindow::onReceiveOCR(OCRInfoPack* ocr){
             m_exhibit->close();
             m_exhibit = NULL;
         }
-        m_exhibit = new ExhibitForm(m_module_dock->getStaticSrc(), ocr);
+        m_exhibit = new ExhibitForm(ocr);
         m_exhibit->show();
         connect(m_exhibit, SIGNAL(signalFinishExhibit()), this, SLOT(onExitOCRExhibit()));
     }
@@ -413,6 +420,7 @@ void MainWindow::onFinishCapture(DataPackage* data){
         connect(m_net_util, SIGNAL(signalConnStateChanged(bool)), this, SLOT(onSetFunctionActive(bool)));
     }
     m_prompt->hidePrompt();
+    const std::list<Operations> infer = m_smart_space.inference();
     if (data){
         QRect screen = QGuiApplication::screens().at(data->screen_id)->geometry();
         QPoint ref_point = *data->ref_point + screen.topLeft();
@@ -527,3 +535,8 @@ void MainWindow::on_ocr_button_clicked()
     m_prompt->setPrompt("wait for a while ...", Lv_HINT, this);
 }
 
+
+void MainWindow::on_smart_space_pushButton_clicked()
+{
+    m_smart_space.accept();
+}

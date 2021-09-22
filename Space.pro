@@ -19,6 +19,7 @@ SOURCES += \
     module/backgroundremover.cpp \
     module/capturescreen.cpp \
     module/latexformulaextractor.cpp \
+    module/smartspace.cpp \
     ui/mainwindow.cpp \
     ui/ocrarea.cpp \
     ui/promptform.cpp \
@@ -41,6 +42,7 @@ HEADERS += \
     module/backgroundremover.h \
     module/capturescreen.h \
     module/latexformulaextractor.h \
+    module/smartspace.h \
     ui/mainwindow.h \
     ui/ocrarea.h \
     ui/promptform.h \
@@ -61,6 +63,11 @@ FORMS += \
     ui/settingsform.ui \
     ui/exhibitform.ui
 
+msvc:{
+QMAKE_CFLAGS += /utf-8
+QMAKE_CXXFLAGS += /utf-8
+}
+
 # opencv 4.5.2
 macx:{
 INCLUDEPATH += $$PWD/opencv/include/opencv4 \
@@ -73,7 +80,7 @@ win32:{
 INCLUDEPATH += ../opencv/include \
                ../opencv/include/opencv2
 
-LIBS += ../opencv/x64/vc15/lib/opencv_world452.lib
+LIBS += ../opencv/x64/vc15/lib/opencv_world452d.lib
 LIBS += User32.LIB
 }
 

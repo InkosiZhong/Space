@@ -23,6 +23,7 @@
 #include "moduledock.h"
 #include "constants.h"
 #include "utils/networkutil.h"
+#include "module/smartspace.h"
 // for clipboard
 #if _WIN32
 #include <Windows.h>
@@ -51,10 +52,10 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
-Q_SIGNALS:
+signals:
     void signalCompleteCature();
     void signalSetSrc(QPixmap*);
-    void signalDockOperation(int op);
+    void signalDockOperation(Operations op);
 
 private:
     void initTrayIcon();
@@ -94,6 +95,8 @@ private slots:
 
     void on_ocr_button_clicked();
 
+    void on_smart_space_pushButton_clicked();
+
 private:
     Ui::MainWindow *m_ui;
 #if _WIN32
@@ -112,5 +115,6 @@ private:
     int m_format = WIN32_CF_BID;
     bool m_save = false, m_origin = false;
     Util::NetworkUtil* m_net_util = NULL;
+    SmartSpace m_smart_space;
 };
 #endif // MAINWINDOW_H

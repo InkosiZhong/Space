@@ -7,6 +7,7 @@
 #include "../utils/curlutil.h"
 #include "../utils/jsonutil.h"
 #include <QDebug>
+#include <QPixmap>
 
 struct OCRWords{
     QString words = "";
@@ -18,7 +19,8 @@ struct OCRWords{
 
 struct OCRInfoPack {
     std::list<OCRWords> ocr_result;
-    OCRInfoPack(const Json::Value& root);
+    QPixmap* src = NULL;
+    OCRInfoPack(const Json::Value& root, QPixmap* pixmap);
     OCRInfoPack();
 };
 

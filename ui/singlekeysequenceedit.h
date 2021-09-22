@@ -2,6 +2,7 @@
 #define SINGLEKEYSEQUENCEEDIT_H
 
 #include <QKeySequenceEdit>
+#include <QMessageBox>
 
 class QKeyEvent;
 class SingleKeySequenceEdit : public QKeySequenceEdit

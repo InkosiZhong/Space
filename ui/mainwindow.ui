@@ -439,6 +439,22 @@ QPushButton:!enabled{border-image: url(:/icon/res/btn_icon/unable/copy.png)}</st
         </property>
        </widget>
       </item>
+      <item>
+       <widget class="QPushButton" name="smart_space_pushButton">
+        <property name="maximumSize">
+         <size>
+          <width>0</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+        <property name="shortcut">
+         <string>Space</string>
+        </property>
+       </widget>
+      </item>
      </layout>
     </item>
    </layout>

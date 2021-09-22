@@ -43,7 +43,7 @@ Q_SIGNALS:
 
 public slots:
     void onSetSrc(QPixmap* src);
-    void onOperation(int);
+    void onOperation(Operations);
 
 public:
     bool operationAvailable(int);
@@ -51,7 +51,6 @@ public:
     void clearAllOperation();       // get the second last one
     void clean();                   // clean to original state
     QPixmap* getSrc();              // get the last one
-    QPixmap* getStaticSrc();        // get the last one
     QPixmap* getOperated();         // get the top one
     void getFormula();
     void getOCR();
