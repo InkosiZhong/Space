@@ -258,6 +258,7 @@ void MainWindow::activeSettingsWindow(){
     m_settings = new SettingsForm();
     connect(m_settings, SIGNAL(signalConfigSaved()), this, SLOT(loadConfig()));
     m_settings->show();
+    m_settings->raise();
 }
 
 void MainWindow::setFunctionActive(int op){
