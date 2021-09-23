@@ -33,16 +33,16 @@ void SettingsForm::initConfig(){
 
     /*Advance*/
     m_xml_controller.append("Config.Advance.LuminanceThreshold", "127");
-    m_xml_controller.append("Config.Advance.MathpixID", EMPTY_STRING);
-    m_xml_controller.append("Config.Advance.MathpixKEY", EMPTY_STRING);
-    m_xml_controller.append("Config.Advance.OCRApiKEY", EMPTY_STRING);
-    m_xml_controller.append("Config.Advance.OCRSecretKEY", EMPTY_STRING);
+    m_xml_controller.append("Config.Advance.MathpixID", "");
+    m_xml_controller.append("Config.Advance.MathpixKEY", "");
+    m_xml_controller.append("Config.Advance.OCRApiKEY", "");
+    m_xml_controller.append("Config.Advance.OCRSecretKEY", "");
     m_xml_controller.append("Config.Advance.PromptLevel", "0");
     m_xml_controller.append("Config.Advance.PromptDetail", "0");
 
     /*HotKey*/
     m_xml_controller.append("Config.HotKey.ScreenShot", "Ctrl+Shift+A");
-    m_xml_controller.append("Config.HotKey.Src", EMPTY_STRING);
+    m_xml_controller.append("Config.HotKey.Src", "");
     m_xml_controller.append("Config.HotKey.Clip", "Return");
     m_xml_controller.append("Config.HotKey.Cancel", "Esc");
     m_xml_controller.append("Config.HotKey.Save", "Ctrl+S");
@@ -52,6 +52,8 @@ void SettingsForm::initConfig(){
 
 
 void SettingsForm::loadConfig(){
+    m_xml_controller.addMapping("", EMPTY_STRING);
+    m_xml_controller.addMapping(EMPTY_STRING, "");
     if (!m_xml_controller.load()) {
         qDebug() << "unable load config.xml";
         initConfig();
@@ -84,13 +86,13 @@ void SettingsForm::loadConfig(){
     m_ui->lu_threshold_edit->setText(val);
     m_ui->lu_threshold_slider->setValue(val.toInt());
     val = m_xml_controller.get("Config.Advance.MathpixID");
-    m_ui->appid_lineEdit->setText(val == EMPTY_STRING ? "" : val);
+    m_ui->appid_lineEdit->setText(val);
     val = m_xml_controller.get("Config.Advance.MathpixKEY");
-    m_ui->appkey_lineEdit->setText(val == EMPTY_STRING ? "" : val);
+    m_ui->appkey_lineEdit->setText(val);
     val = m_xml_controller.get("Config.Advance.OCRApiKEY");
-    m_ui->ocr_apikey_lineEdit->setText(val == EMPTY_STRING ? "" : val);
+    m_ui->ocr_apikey_lineEdit->setText(val);
     val = m_xml_controller.get("Config.Advance.OCRSecretKEY");
-    m_ui->ocr_secure_key_lineEdit->setText(val == EMPTY_STRING ? "" : val);
+    m_ui->ocr_secure_key_lineEdit->setText(val);
     val = m_xml_controller.get("Config.Advance.PromptLevel");
     m_ui->promptlevel_slider->setValue(val.toInt());
     val = m_xml_controller.get("Config.Advance.PromptDetail");
@@ -115,13 +117,15 @@ void SettingsForm::save2File(){
 }
 
 void SettingsForm::saveGeneralConfig(){
+    int format;
 #if _WIN32
-    int format = WIN32_CF_BID;
+    format = WIN32_CF_BID;
     if (m_ui->xmind_radiobutton->isChecked())format = WIN32_CF_BID;
     else if (m_ui->office_radiobutton->isChecked())format = WIN32_PNG;
     else if (m_ui->png_radiobutton->isChecked())format = WIN32_FILE;
     m_xml_controller.set("Config.General.ClipFormat", QString::number(format));
 #endif
+    format = SPACE_AI;
     if (m_ui->space_disable_radioButton->isChecked())format = SPACE_DISBALE;
     else if (m_ui->space_ai_radioButton->isChecked())format = SPACE_AI;
     else if (m_ui->space_imitate_radioButton->isChecked())format = SPACE_IMITATE;
@@ -131,10 +135,10 @@ void SettingsForm::saveGeneralConfig(){
 
 void SettingsForm::saveAdvanceConfig(){
     m_xml_controller.set("Config.Advance.LuminanceThreshold", m_ui->lu_threshold_edit->text());
-    m_xml_controller.set("Config.Advance.MathpixID", m_ui->appid_lineEdit->text().isEmpty() ? EMPTY_STRING : m_ui->appid_lineEdit->text());
-    m_xml_controller.set("Config.Advance.MathpixKEY", m_ui->appkey_lineEdit->text().isEmpty() ? EMPTY_STRING : m_ui->appkey_lineEdit->text());
-    m_xml_controller.set("Config.Advance.OCRApiKEY", m_ui->ocr_apikey_lineEdit->text().isEmpty() ? EMPTY_STRING : m_ui->ocr_apikey_lineEdit->text());
-    m_xml_controller.set("Config.Advance.OCRSecretKEY", m_ui->ocr_secure_key_lineEdit->text().isEmpty() ? EMPTY_STRING : m_ui->ocr_secure_key_lineEdit->text());
+    m_xml_controller.set("Config.Advance.MathpixID", m_ui->appid_lineEdit->text());
+    m_xml_controller.set("Config.Advance.MathpixKEY", m_ui->appkey_lineEdit->text());
+    m_xml_controller.set("Config.Advance.OCRApiKEY", m_ui->ocr_apikey_lineEdit->text());
+    m_xml_controller.set("Config.Advance.OCRSecretKEY", m_ui->ocr_secure_key_lineEdit->text());
     m_xml_controller.set("Config.Advance.PromptLevel", QString::number(m_ui->promptlevel_slider->value()));
     short prompt_flag = 0;
     if (m_ui->mathpix_checkBox->isChecked())prompt_flag |= PROMPT_MATHPIX;
@@ -143,16 +147,11 @@ void SettingsForm::saveAdvanceConfig(){
 }
 
 void SettingsForm::saveHotKeyConfig(){
-    QString val = m_ui->screenshot_edit->keySequence().toString();
-    m_xml_controller.set("Config.HotKey.ScreenShot", val == "" ? EMPTY_STRING : val);
-    val = m_ui->src_edit->keySequence().toString();
-    m_xml_controller.set("Config.HotKey.Src", val == "" ? EMPTY_STRING : val);
-    val = m_ui->clip_edit->keySequence().toString();
-    m_xml_controller.set("Config.HotKey.Clip", val == "" ? EMPTY_STRING : val);
-    val = m_ui->cancel_edit->keySequence().toString();
-    m_xml_controller.set("Config.HotKey.Cancel", val == "" ? EMPTY_STRING : val);
-    val = m_ui->save_edit->keySequence().toString();
-    m_xml_controller.set("Config.HotKey.Save", val == "" ? EMPTY_STRING : val);
+    m_xml_controller.set("Config.HotKey.ScreenShot", m_ui->screenshot_edit->keySequence().toString());
+    m_xml_controller.set("Config.HotKey.Src", m_ui->src_edit->keySequence().toString());
+    m_xml_controller.set("Config.HotKey.Clip", m_ui->clip_edit->keySequence().toString());
+    m_xml_controller.set("Config.HotKey.Cancel", m_ui->cancel_edit->keySequence().toString());
+    m_xml_controller.set("Config.HotKey.Save", m_ui->save_edit->keySequence().toString());
     save2File();
 }
 

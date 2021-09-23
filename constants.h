@@ -68,8 +68,8 @@ enum ClipboardFormat {
 };
 
 enum Operations{
-    GetSrc,
     GetOperated,
+    GetSrc,
     GetFormula,
     GetOCR,
     RollBack,
@@ -90,5 +90,8 @@ enum SmartSpaceMode {
     SPACE_IMITATE
 };
 
+extern const float MAIN_CONF;
+extern const float LATEX_SIZE_PROP_THREAD;
+extern const float OCR_DENSITY_THREAD;
 
 #endif // CONSTANTS_H

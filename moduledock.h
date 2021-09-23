@@ -36,7 +36,7 @@ public:
     ModuleDock(QObject* parent = nullptr);
     void setup(ConfigPack& cfg);
 
-Q_SIGNALS:
+signals:
     void signalSendMap(QPixmap* map);
     void signalSendFormula(LatexInfoPack* latex);
     void signalSendOCR(OCRInfoPack* ocr);

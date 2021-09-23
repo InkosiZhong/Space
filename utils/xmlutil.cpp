@@ -15,6 +15,7 @@ void Util::XmlUtil::resetConnSymbol(const QString& symbol) {
 }
 
 bool Util::XmlUtil::create(const QString& path) {
+    if (!path.isEmpty())resetPath(path);
     QDomProcessingInstruction instruction = m_doc.createProcessingInstruction("xml","version=\"1.0\" encoding=\"UTF-8\"");
     m_doc.appendChild(instruction);
     return true;
@@ -38,19 +39,35 @@ bool Util::XmlUtil::save(const QString& path, uint n_space) {
 }
 
 bool Util::XmlUtil::addMapping(const QString& key, const QString& val){
-
+    if (m_mapping.find(key) == m_mapping.end()){
+        m_mapping[key] = val;
+        return true;
+    }
+    return false;
 }
 
 bool Util::XmlUtil::removeMapping(const QString& key){
-
+    if (m_mapping.find(key) != m_mapping.end()){
+        m_mapping.erase(key);
+        return true;
+    }
+    return false;
 }
 
-bool Util::XmlUtil::alterMapping(const QString& key, const QString& val){
-
+bool Util::XmlUtil::alterMapping(const QString& key, const QString& val, bool check){
+    if (!check || m_mapping.find(key) != m_mapping.end()){
+        m_mapping[key] = val;
+        return true;
+    }
+    return false;
 }
 
 bool Util::XmlUtil::getMapping(const QString& key, QString& val){
-
+    if (m_mapping.find(key) != m_mapping.end()){
+        val = m_mapping[key];
+        return true;
+    }
+    return false;
 }
 
 bool Util::XmlUtil::append(const QString& src, const QString& val) {
@@ -69,7 +86,7 @@ bool Util::XmlUtil::append(const QString& src, const QString& val) {
         }
         elem = child;
     }
-    QDomText text = m_doc.createTextNode(val);
+    QDomText text = m_doc.createTextNode(m_mapping[val].isEmpty() ? val : m_mapping[val]);
     elem.appendChild(text);
     return true;
 }
@@ -84,7 +101,7 @@ bool Util::XmlUtil::set(const QString& src, const QString& val) {
         if (elem.isNull())return false;
     }
     if (elem.firstChild().isNull())return false;
-    elem.firstChild().setNodeValue(val);
+    elem.firstChild().setNodeValue(m_mapping[val].isEmpty() ? val : m_mapping[val]);
     return true;
 }
 
@@ -97,6 +114,6 @@ QString Util::XmlUtil::get(const QString& src, const QString& def_val) {
         elem = elem.firstChildElement(*it);
         if (elem.isNull())return def_val;
     }
-    QString ret = elem.text();
-    return m_mapping[ret].isEmpty() ? ret : m_mapping[ret];
+    QString val = elem.text();
+    return m_mapping.find(val) == m_mapping.end() ? val : m_mapping[val];
 }

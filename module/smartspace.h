@@ -26,9 +26,7 @@ signals:
 
 public slots:
     void onOperation(Operations op);
-
-private:
-    void AIInference();
+    void AIInference(QPixmap* src);
 
 private:
     SmartSpaceMode m_mode;

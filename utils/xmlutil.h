@@ -22,7 +22,7 @@ public:
 
     bool addMapping(const QString& key, const QString& val);
     bool removeMapping(const QString& key);
-    bool alterMapping(const QString& key, const QString& val);
+    bool alterMapping(const QString& key, const QString& val, bool check = false);
     bool getMapping(const QString& key, QString& val);
 
     /*** append: call when xml is incomplete

@@ -19,6 +19,8 @@ MainWindow::~MainWindow()
 {
     dockThread.quit();
     dockThread.wait();
+    spaceThread.quit();
+    spaceThread.wait();
     this->setParent(NULL);
     delete m_ui;
 }
@@ -54,21 +56,21 @@ void MainWindow::initConfig(){
 
     /*Advance*/
     m_xml_controller.append("Config.Advance.LuminanceThreshold", "127");
-    m_xml_controller.append("Config.Advance.MathpixID", EMPTY_STRING);
-    m_xml_controller.append("Config.Advance.MathpixKEY", EMPTY_STRING);
-    m_xml_controller.append("Config.Advance.OCRApiKEY", EMPTY_STRING);
-    m_xml_controller.append("Config.Advance.OCRSecretKEY", EMPTY_STRING);
+    m_xml_controller.append("Config.Advance.MathpixID", "");
+    m_xml_controller.append("Config.Advance.MathpixKEY", "");
+    m_xml_controller.append("Config.Advance.OCRApiKEY", "");
+    m_xml_controller.append("Config.Advance.OCRSecretKEY", "");
     m_xml_controller.append("Config.Advance.PromptLevel", "0");
     m_xml_controller.append("Config.Advance.PromptDetail", "0");
 
     /*HotKey*/
     m_xml_controller.append("Config.HotKey.ScreenShot", "Ctrl+Shift+A");
-    m_xml_controller.append("Config.HotKey.Src", EMPTY_STRING);
+    m_xml_controller.append("Config.HotKey.Src", "");
     m_xml_controller.append("Config.HotKey.Clip", "Return");
     m_xml_controller.append("Config.HotKey.Cancel", "Esc");
     m_xml_controller.append("Config.HotKey.Save", "Ctrl+S");
-    m_xml_controller.append("Config.HotKey.LaTeX", EMPTY_STRING);
-    m_xml_controller.append("Config.HotKey.OCR", EMPTY_STRING);
+    m_xml_controller.append("Config.HotKey.LaTeX", "");
+    m_xml_controller.append("Config.HotKey.OCR", "");
 
     m_xml_controller.save();
 }
@@ -170,6 +172,8 @@ bool MainWindow::eventFilter(QObject* obj, QEvent* event){
 }
 
 void MainWindow::loadConfig(){
+    m_xml_controller.addMapping("", EMPTY_STRING);
+    m_xml_controller.addMapping(EMPTY_STRING, "");
     if (!m_xml_controller.load()){
         qDebug() << "unable load config.xml";
         initConfig();
@@ -193,11 +197,7 @@ void MainWindow::setupAdvanceConfig(){
     QString mathpix_key = m_xml_controller.get("Config.Advance.MathpixKEY");
     QString ocr_api_key = m_xml_controller.get("Config.Advance.OCRApiKEY");
     QString ocr_sec_key = m_xml_controller.get("Config.Advance.OCRSecretKEY");
-    ConfigPack cfg = ConfigPack(lu.toInt(),
-                                mathpix_id == EMPTY_STRING ? "" : mathpix_id,
-                                mathpix_key == EMPTY_STRING ? "" : mathpix_key,
-                                ocr_api_key == EMPTY_STRING ? "" : ocr_api_key,
-                                ocr_sec_key == EMPTY_STRING ? "" : ocr_sec_key);
+    ConfigPack cfg = ConfigPack(lu.toInt(), mathpix_id, mathpix_key, ocr_api_key, ocr_sec_key);
     m_module_dock->setup(cfg);
     QString val = m_xml_controller.get("Config.Advance.PromptLevel");
     m_prompt->setMinLevel(val.toInt());
@@ -211,18 +211,12 @@ void MainWindow::setupHotKeyConfig(){
     connect(m_shortcut, &QxtGlobalShortcut::activated,
         [=]() {screenCapture();});
 
-    val = m_xml_controller.get("Config.HotKey.Src");
-    m_ui->source_button->setShortcut(QKeySequence(val == EMPTY_STRING ? "" : val));
-    val = m_xml_controller.get("Config.HotKey.Clip");
-    m_ui->copy_button->setShortcut(QKeySequence(val == EMPTY_STRING ? "" : val));
-    val = m_xml_controller.get("Config.HotKey.Cancel");
-    m_ui->exit_button->setShortcut(QKeySequence(val == EMPTY_STRING ? "" : val));
-    val = m_xml_controller.get("Config.HotKey.Save");
-    m_ui->save_button->setShortcut(QKeySequence(val == EMPTY_STRING ? "" : val));
-    val = m_xml_controller.get("Config.HotKey.LaTeX");
-    m_ui->latex_button->setShortcut(QKeySequence(val == EMPTY_STRING ? "" : val));
-    val = m_xml_controller.get("Config.HotKey.OCR");
-    m_ui->ocr_button->setShortcut(QKeySequence(val == EMPTY_STRING ? "" : val));
+    m_ui->source_button->setShortcut(QKeySequence(m_xml_controller.get("Config.HotKey.Src")));
+    m_ui->copy_button->setShortcut(QKeySequence(m_xml_controller.get("Config.HotKey.Clip")));
+    m_ui->exit_button->setShortcut(QKeySequence(m_xml_controller.get("Config.HotKey.Cancel")));
+    m_ui->save_button->setShortcut(QKeySequence(m_xml_controller.get("Config.HotKey.Save")));
+    m_ui->latex_button->setShortcut(QKeySequence(m_xml_controller.get("Config.HotKey.LaTeX")));
+    m_ui->ocr_button->setShortcut(QKeySequence(m_xml_controller.get("Config.HotKey.OCR")));
 }
 
 void MainWindow::initModules(){
@@ -236,6 +230,8 @@ void MainWindow::initModules(){
     connect(m_module_dock, SIGNAL(signalSendOCR(OCRInfoPack*)), this, SLOT(onReceiveOCR(OCRInfoPack*)));
 
     m_smart_space.setModuleDock(m_module_dock);
+    m_smart_space.moveToThread(&spaceThread);
+    connect(this, SIGNAL(signalSetSrc(QPixmap*)), &m_smart_space, SLOT(AIInference(QPixmap*)));
     connect(this, SIGNAL(signalDockOperation(Operations)), &m_smart_space, SLOT(onOperation(Operations)));
     connect(&m_smart_space, SIGNAL(signalState(bool)), this, SLOT(onSetHighLight(bool)));
 }
@@ -466,6 +462,7 @@ void MainWindow::onFinishCapture(DataPackage* data){
 
         if (data->src){
             dockThread.start();
+            spaceThread.start();
             emit signalSetSrc(data->src);
         }
     }
