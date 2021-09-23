@@ -28,8 +28,9 @@ void SettingsForm::initConfig(){
     m_xml_controller.create();
 
     /*General*/
-    m_xml_controller.append("Config.General.ClipFormat", "0");
+    m_xml_controller.append("Config.General.ClipFormat", QString::number(WIN32_CF_BID));
     m_xml_controller.append("Config.General.SmartSpace", QString::number(SPACE_AI));
+    m_xml_controller.append("Config.General.Performance", QString::number(PERFORM_LIGHTWEIGHT));
 
     /*Advance*/
     m_xml_controller.append("Config.Advance.LuminanceThreshold", "127");
@@ -37,7 +38,7 @@ void SettingsForm::initConfig(){
     m_xml_controller.append("Config.Advance.MathpixKEY", "");
     m_xml_controller.append("Config.Advance.OCRApiKEY", "");
     m_xml_controller.append("Config.Advance.OCRSecretKEY", "");
-    m_xml_controller.append("Config.Advance.PromptLevel", "0");
+    m_xml_controller.append("Config.Advance.PromptLevel", QString::number(Lv_HINT));
     m_xml_controller.append("Config.Advance.PromptDetail", "0");
 
     /*HotKey*/
@@ -46,10 +47,11 @@ void SettingsForm::initConfig(){
     m_xml_controller.append("Config.HotKey.Clip", "Return");
     m_xml_controller.append("Config.HotKey.Cancel", "Esc");
     m_xml_controller.append("Config.HotKey.Save", "Ctrl+S");
+    m_xml_controller.append("Config.HotKey.LaTeX", "");
+    m_xml_controller.append("Config.HotKey.OCR", "");
 
     m_xml_controller.save();
 }
-
 
 void SettingsForm::loadConfig(){
     m_xml_controller.addMapping("", EMPTY_STRING);
@@ -79,6 +81,15 @@ void SettingsForm::loadConfig(){
     case SPACE_DISBALE: m_ui->space_disable_radioButton->setChecked(true); break;
     case SPACE_AI: m_ui->space_ai_radioButton->setChecked(true); break;
     case SPACE_IMITATE: m_ui->space_imitate_radioButton->setChecked(true); break;
+    }
+    val = m_xml_controller.get("Config.General.Performance");
+    if (val.toInt() == PERFORM_ADAPTIVE){
+        m_ui->performance_slider->setEnabled(false);
+        m_ui->performance_adaptive_checkBox->setChecked(true);
+    } else {
+        m_ui->performance_slider->setEnabled(true);
+        m_ui->performance_slider->setValue(val.toInt());
+        m_ui->performance_adaptive_checkBox->setChecked(false);
     }
 
     /*Advance*/
@@ -130,6 +141,11 @@ void SettingsForm::saveGeneralConfig(){
     else if (m_ui->space_ai_radioButton->isChecked())format = SPACE_AI;
     else if (m_ui->space_imitate_radioButton->isChecked())format = SPACE_IMITATE;
     m_xml_controller.set("Config.General.SmartSpace", QString::number(format));
+    if (m_ui->performance_adaptive_checkBox->isChecked()){
+        m_xml_controller.set("Config.General.Performance", QString::number(PERFORM_ADAPTIVE));
+    } else {
+        m_xml_controller.set("Config.General.Performance", QString::number(m_ui->performance_slider->value()));
+    }
     save2File();
 }
 
@@ -227,4 +243,9 @@ void SettingsForm::on_promptlevel_slider_valueChanged(int value)
         m_ui->promptlevel_label->setText("NONE");
         break;
     }
+}
+
+void SettingsForm::on_performance_adaptive_checkBox_toggled(bool checked)
+{
+    m_ui->performance_slider->setEnabled(!checked);
 }

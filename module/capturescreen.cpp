@@ -10,14 +10,22 @@ CaptureScreen::CaptureScreen(QWidget *parent)
     //, m_is_mouse_press(false)
 {
     initWindow();
+    active();
+}
+
+CaptureScreen::~CaptureScreen() {}
+
+void CaptureScreen::active(){
+    m_begin_point = QPoint();
+    m_end_point = QPoint();
+    m_begin_move_point = QPoint();
+    m_end_move_point = QPoint();
     initStretchRect();
     loadBackgroundPixmap();
 #if __APPLE__
     setFixedSize(m_screen_width, m_screen_height);
 #endif
 }
-
-CaptureScreen::~CaptureScreen() {}
 
 void CaptureScreen::initWindow()
 {

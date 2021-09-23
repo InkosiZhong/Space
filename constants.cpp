@@ -67,3 +67,5 @@ Q_DECLARE_METATYPE(SmartSpaceMode);
 const float MAIN_CONF = 0.5;
 const float LATEX_SIZE_PROP_THREAD = 5;
 const float OCR_DENSITY_THREAD = 0.5;
+
+enum Performance;

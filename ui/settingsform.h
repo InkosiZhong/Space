@@ -44,6 +44,8 @@ private slots:
     void on_lu_threshold_edit_textChanged(const QString &val);
     void on_promptlevel_slider_valueChanged(int value);
 
+    void on_performance_adaptive_checkBox_toggled(bool checked);
+
 private:
     void closeEvent(QCloseEvent *event);
     void initConfig();

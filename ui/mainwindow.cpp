@@ -51,16 +51,17 @@ void MainWindow::initConfig(){
     m_xml_controller.create();
 
     /*General*/
-    m_xml_controller.append("Config.General.ClipFormat", "0");
+    m_xml_controller.append("Config.General.ClipFormat", QString::number(WIN32_CF_BID));
     m_xml_controller.append("Config.General.SmartSpace", QString::number(SPACE_AI));
+    m_xml_controller.append("Config.General.Performance", QString::number(PERFORM_LIGHTWEIGHT));
 
     /*Advance*/
-    m_xml_controller.append("Config.Advance.LuminanceThreshold", "127");
+    m_xml_controller.append("Config.Advaznce.LuminanceThreshold", "127");
     m_xml_controller.append("Config.Advance.MathpixID", "");
     m_xml_controller.append("Config.Advance.MathpixKEY", "");
     m_xml_controller.append("Config.Advance.OCRApiKEY", "");
     m_xml_controller.append("Config.Advance.OCRSecretKEY", "");
-    m_xml_controller.append("Config.Advance.PromptLevel", "0");
+    m_xml_controller.append("Config.Advance.PromptLevel", QString::number(Lv_HINT));
     m_xml_controller.append("Config.Advance.PromptDetail", "0");
 
     /*HotKey*/
@@ -189,6 +190,8 @@ void MainWindow::setupGeneralConfig(){
     m_format = val.toInt();
     val = m_xml_controller.get("Config.General.SmartSpace");
     m_smart_space.setMode(SmartSpaceMode(val.toInt()));
+    val = m_xml_controller.get("Config.General.Performance");
+    m_perform_level = Performance(val.toInt());
 }
 
 void MainWindow::setupAdvanceConfig(){
@@ -197,7 +200,7 @@ void MainWindow::setupAdvanceConfig(){
     QString mathpix_key = m_xml_controller.get("Config.Advance.MathpixKEY");
     QString ocr_api_key = m_xml_controller.get("Config.Advance.OCRApiKEY");
     QString ocr_sec_key = m_xml_controller.get("Config.Advance.OCRSecretKEY");
-    ConfigPack cfg = ConfigPack(lu.toInt(), mathpix_id, mathpix_key, ocr_api_key, ocr_sec_key);
+    ConfigPack cfg = ConfigPack(m_perform_level, lu.toInt(), mathpix_id, mathpix_key, ocr_api_key, ocr_sec_key);
     m_module_dock->setup(cfg);
     QString val = m_xml_controller.get("Config.Advance.PromptLevel");
     m_prompt->setMinLevel(val.toInt());
@@ -240,7 +243,11 @@ void MainWindow::screenCapture(){
     if (m_capturing)return;
     m_capturing = true;
     this->setParent(NULL);
-    m_capturer = new CaptureScreen();
+    if (!m_capturer || m_perform_level < PERFORM_SPEED){
+        m_capturer = new CaptureScreen();
+    } else {
+        m_capturer->active();
+    }
     this->setParent(m_capturer);
     connect(m_capturer, SIGNAL(signalFinishCapture(DataPackage*)), this, SLOT(onFinishCapture(DataPackage*)));
     connect(m_capturer, SIGNAL(signalCancelCapture()), this, SLOT(on_exit_button_clicked()));
@@ -482,7 +489,7 @@ void MainWindow::onExitCapture(){
     activeToolsDock(NULL);
     m_prompt->hidePrompt();
     m_capturing = false;
-    if (m_capturer){
+    if (m_capturer && m_perform_level < PERFORM_SPEED){
         m_capturer->close();
         m_capturer = NULL;
     }

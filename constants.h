@@ -67,7 +67,7 @@ enum ClipboardFormat {
     WIN32_FILE
 };
 
-enum Operations{
+enum Operations {
     GetOperated,
     GetSrc,
     GetFormula,
@@ -93,5 +93,12 @@ enum SmartSpaceMode {
 extern const float MAIN_CONF;
 extern const float LATEX_SIZE_PROP_THREAD;
 extern const float OCR_DENSITY_THREAD;
+
+enum Performance {
+    PERFORM_LIGHTWEIGHT,
+    PERFORM_BALANCE,
+    PERFORM_SPEED,
+    PERFORM_ADAPTIVE
+};
 
 #endif // CONSTANTS_H

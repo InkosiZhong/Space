@@ -23,6 +23,8 @@ public:
     CaptureScreen(QWidget *parent = 0);
     ~CaptureScreen();
 
+    void active();
+
 Q_SIGNALS:
     void signalFinishCapture(DataPackage* data);
     void signalCancelCapture(); // when click nothing

@@ -28,13 +28,13 @@
    <item>
     <widget class="QTabWidget" name="setting_tabs">
      <property name="currentIndex">
-      <number>2</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="general_tab">
       <attribute name="title">
        <string>常规</string>
       </attribute>
-      <layout class="QVBoxLayout" name="verticalLayout_4" stretch="0,0,1,0">
+      <layout class="QVBoxLayout" name="verticalLayout_4" stretch="0,0,0,1,0">
        <property name="leftMargin">
         <number>30</number>
        </property>
@@ -95,6 +95,9 @@
        </item>
        <item>
         <widget class="QGroupBox" name="groupBox_4">
+         <property name="whatsThis">
+          <string>windows下存入剪切板的不同适配方案</string>
+         </property>
          <property name="title">
           <string>剪切板格式</string>
          </property>
@@ -160,6 +163,67 @@
               <width>16</width>
               <height>16</height>
              </size>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <widget class="QGroupBox" name="groupBox_6">
+         <property name="title">
+          <string>性能</string>
+         </property>
+         <layout class="QHBoxLayout" name="horizontalLayout_22">
+          <item>
+           <widget class="QLabel" name="label_16">
+            <property name="minimumSize">
+             <size>
+              <width>50</width>
+              <height>0</height>
+             </size>
+            </property>
+            <property name="text">
+             <string>轻量</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignCenter</set>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QSlider" name="performance_slider">
+            <property name="maximum">
+             <number>2</number>
+            </property>
+            <property name="pageStep">
+             <number>1</number>
+            </property>
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="label_17">
+            <property name="minimumSize">
+             <size>
+              <width>50</width>
+              <height>0</height>
+             </size>
+            </property>
+            <property name="text">
+             <string>速度</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignCenter</set>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="performance_adaptive_checkBox">
+            <property name="text">
+             <string>自适应</string>
             </property>
            </widget>
           </item>

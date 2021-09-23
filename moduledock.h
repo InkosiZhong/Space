@@ -18,13 +18,16 @@
 
 struct ConfigPack
 {
+    const Performance perform_level = PERFORM_LIGHTWEIGHT;
     const int lu_threshold = 127;
     const QString mathpix_app_id = "", mathpix_app_key = "";
     const QString baidu_ocr_api_key = "", baidu_ocr_secret_key = "";
     ConfigPack() {};
-    ConfigPack(const int lu, const QString math_id, const QString math_key,
+    ConfigPack(const Performance perform, const int lu,
+               const QString math_id, const QString math_key,
                const QString ocr_api_key, const QString ocr_secret_key):
-        lu_threshold(lu), mathpix_app_id(math_id), mathpix_app_key(math_key),
+        perform_level(perform), lu_threshold(lu),
+        mathpix_app_id(math_id), mathpix_app_key(math_key),
         baidu_ocr_api_key(ocr_api_key), baidu_ocr_secret_key(ocr_secret_key){}
 };
 
@@ -62,6 +65,7 @@ private:
     LatexInfoPack m_latex;
     OCRHandler m_ocr_handler;
     OCRInfoPack m_ocr;
+    Performance m_perform_level = PERFORM_LIGHTWEIGHT;
 };
 
 #endif // MODULEDOCK_H

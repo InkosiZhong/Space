@@ -117,5 +117,6 @@ private:
     bool m_save = false, m_origin = false;
     Util::NetworkUtil* m_net_util = NULL;
     SmartSpace m_smart_space;
+    Performance m_perform_level = PERFORM_LIGHTWEIGHT;
 };
 #endif // MAINWINDOW_H

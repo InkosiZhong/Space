@@ -9,6 +9,7 @@ void ModuleDock::setup(ConfigPack& cfg){
     m_bg_remover.setThreshold(cfg.lu_threshold);
     m_formula_extractor.setAppIdAndKey(cfg.mathpix_app_id, cfg.mathpix_app_key);
     m_ocr_handler.setAppTokenbyKey(cfg.baidu_ocr_api_key, cfg.baidu_ocr_secret_key);
+    m_perform_level = cfg.perform_level;
 }
 
 void ModuleDock::rollBackOperation(){
