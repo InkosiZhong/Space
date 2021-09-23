@@ -85,6 +85,7 @@ private slots:
     void onReceiveOCR(OCRInfoPack* ocr);
     void onExitOCRExhibit();
     void onSetFunctionActive(bool);
+    void onSetHighLight(bool);
 
     void on_copy_button_clicked();
     void on_exit_button_clicked();

@@ -1,26 +1,26 @@
 #include "xmlutil.h"
 
-Util::XmlUtil::XmlUtil(QString path, QString symbol)
+Util::XmlUtil::XmlUtil(const QString& path, const QString& symbol)
 {
     resetPath(path);
     resetConnSymbol(symbol);
 }
 
-void Util::XmlUtil::resetPath(QString path) {
+void Util::XmlUtil::resetPath(const QString& path) {
     m_path = path;
 }
 
-void Util::XmlUtil::resetConnSymbol(QString symbol) {
+void Util::XmlUtil::resetConnSymbol(const QString& symbol) {
     m_conn_symbol = symbol;
 }
 
-bool Util::XmlUtil::create(QString path) {
+bool Util::XmlUtil::create(const QString& path) {
     QDomProcessingInstruction instruction = m_doc.createProcessingInstruction("xml","version=\"1.0\" encoding=\"UTF-8\"");
     m_doc.appendChild(instruction);
     return true;
 }
 
-bool Util::XmlUtil::load(QString path) {
+bool Util::XmlUtil::load(const QString& path) {
     QFile config_xml(path.isEmpty() ? m_path : path);
     if (!config_xml.open(QIODevice::ReadOnly)) return false;
     bool res = m_doc.setContent(&config_xml);
@@ -28,7 +28,7 @@ bool Util::XmlUtil::load(QString path) {
     return res;
 }
 
-bool Util::XmlUtil::save(QString path, uint n_space) {
+bool Util::XmlUtil::save(const QString& path, uint n_space) {
     QFile config_xml(path.isEmpty() ? m_path : path);
     if(!config_xml.open(QIODevice::WriteOnly | QIODevice::Truncate)) return false;
     QTextStream out(&config_xml);
@@ -37,7 +37,23 @@ bool Util::XmlUtil::save(QString path, uint n_space) {
     return true;
 }
 
-bool Util::XmlUtil::append(QString src, QString val) {
+bool Util::XmlUtil::addMapping(const QString& key, const QString& val){
+
+}
+
+bool Util::XmlUtil::removeMapping(const QString& key){
+
+}
+
+bool Util::XmlUtil::alterMapping(const QString& key, const QString& val){
+
+}
+
+bool Util::XmlUtil::getMapping(const QString& key, QString& val){
+
+}
+
+bool Util::XmlUtil::append(const QString& src, const QString& val) {
     QStringList node_path = src.split(m_conn_symbol);
     QStringList::iterator it = node_path.begin();
     QDomElement elem = m_doc.firstChildElement(*it);
@@ -58,7 +74,7 @@ bool Util::XmlUtil::append(QString src, QString val) {
     return true;
 }
 
-bool Util::XmlUtil::set(QString src, QString val) {
+bool Util::XmlUtil::set(const QString& src, const QString& val) {
     QStringList node_path = src.split(m_conn_symbol);
     QStringList::iterator it = node_path.begin();
     QDomElement elem = m_doc.firstChildElement(*it);
@@ -72,14 +88,15 @@ bool Util::XmlUtil::set(QString src, QString val) {
     return true;
 }
 
-QString Util::XmlUtil::get(QString src) {
+QString Util::XmlUtil::get(const QString& src, const QString& def_val) {
     QStringList node_path = src.split(m_conn_symbol);
     QStringList::iterator it = node_path.begin();
     QDomElement elem = m_doc.firstChildElement(*it);
-    if (elem.isNull())return "";
+    if (elem.isNull())return def_val;
     while (++it != node_path.end()) {
         elem = elem.firstChildElement(*it);
-        if (elem.isNull())return "";
+        if (elem.isNull())return def_val;
     }
-    return elem.text();
+    QString ret = elem.text();
+    return m_mapping[ret].isEmpty() ? ret : m_mapping[ret];
 }

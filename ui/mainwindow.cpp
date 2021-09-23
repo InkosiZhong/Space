@@ -67,6 +67,8 @@ void MainWindow::initConfig(){
     m_xml_controller.append("Config.HotKey.Clip", "Return");
     m_xml_controller.append("Config.HotKey.Cancel", "Esc");
     m_xml_controller.append("Config.HotKey.Save", "Ctrl+S");
+    m_xml_controller.append("Config.HotKey.LaTeX", EMPTY_STRING);
+    m_xml_controller.append("Config.HotKey.OCR", EMPTY_STRING);
 
     m_xml_controller.save();
 }
@@ -85,13 +87,37 @@ void MainWindow::initHoverPrompt(){
     enableButtonHover(m_ui->source_button, this);
 }
 
-void setHoverStyle(QPushButton* btn, QString txt){
+void setBtnStyle(QPushButton* btn, QString txt, bool highlight = false){
     if(btn->isEnabled()){
-        QString style = "QPushButton{border-image: url(:/icon/res/btn_icon/default/" + txt + ".png)}" +
-                        "QPushButton:hover{border-image: url(:/icon/res/btn_icon/hover/" + txt + ".png)}" +
-                        "QPushButton:pressed{border-image: url(:/icon/res/btn_icon/press/" + txt + ".png)}" +
-                        "QPushButton:!enabled{border-image: url(:/icon/res/btn_icon/unable/" + txt + ".png)}";
+        QString style;
+        if (highlight){
+            style = "QPushButton{border-image: url(:/icon/res/btn_icon/highlight/" + txt + ".png)}";
+        } else {
+            style = "QPushButton{border-image: url(:/icon/res/btn_icon/default/" + txt + ".png)}";
+        }
+        style = style + "QPushButton:hover{border-image: url(:/icon/res/btn_icon/hover/" + txt + ".png)}" +
+                "QPushButton:pressed{border-image: url(:/icon/res/btn_icon/press/" + txt + ".png)}" +
+                "QPushButton:!enabled{border-image: url(:/icon/res/btn_icon/unable/" + txt + ".png)}";
         btn->setStyleSheet(style);
+    }
+}
+
+void MainWindow::onSetHighLight(bool active){
+    if (active){
+        const std::list<Operations> infer = m_smart_space.inference();
+        if (infer.empty())return;
+        switch (infer.front()){
+        case GetSrc: setBtnStyle(m_ui->source_button, "picture", true); break;
+        case GetOperated: setBtnStyle(m_ui->copy_button, "copy", true); break;
+        case GetFormula: setBtnStyle(m_ui->latex_button, "LaTex", true); break;
+        case GetOCR: setBtnStyle(m_ui->ocr_button, "OCR", true); break;
+        default: break;
+        }
+    } else {
+        setBtnStyle(m_ui->source_button, "picture", false);
+        setBtnStyle(m_ui->copy_button, "copy", false);
+        setBtnStyle(m_ui->latex_button, "LaTex", false);
+        setBtnStyle(m_ui->ocr_button, "OCR", false);
     }
 }
 
@@ -101,29 +127,29 @@ bool MainWindow::eventFilter(QObject* obj, QEvent* event){
             QString prompt = "extracting LaTeX formula";
             if (!m_ui->latex_button->isEnabled())prompt += " (activate in setting)";
             m_prompt->setPrompt(prompt, Lv_HINT, this);
-            setHoverStyle(m_ui->latex_button, "LaTex");
+            setBtnStyle(m_ui->latex_button, "LaTex");
         }
         if (obj == m_ui->ocr_button){
             if (!m_ui->ocr_button->isEnabled()){
                 m_prompt->setPrompt("OCR (activate in setting)", Lv_HINT, this);
             }
-            setHoverStyle(m_ui->ocr_button, "OCR");
+            setBtnStyle(m_ui->ocr_button, "OCR");
         }
         else if (obj == m_ui->code_button){
             m_prompt->setPrompt("extracting Code", Lv_HINT, this);
-            setHoverStyle(m_ui->code_button, "code");
+            setBtnStyle(m_ui->code_button, "code");
         }
         else if (obj == m_ui->concat_button){
             m_prompt->setPrompt("concatenating images", Lv_HINT, this);
-            setHoverStyle(m_ui->concat_button, "layout");
+            setBtnStyle(m_ui->concat_button, "layout");
         }
         else if (obj == m_ui->setting_button){
             m_prompt->setPrompt("customizing settings", Lv_HINT, this);
-            setHoverStyle(m_ui->setting_button, "adjust");
+            setBtnStyle(m_ui->setting_button, "adjust");
         }
         else if (obj == m_ui->source_button){
             m_prompt->setPrompt("get source images", Lv_HINT, this);
-            setHoverStyle(m_ui->source_button, "picture");
+            setBtnStyle(m_ui->source_button, "picture");
         }
         return true;
     }
@@ -131,12 +157,12 @@ bool MainWindow::eventFilter(QObject* obj, QEvent* event){
         if (obj == m_ui->latex_button || obj == m_ui->setting_button || obj == m_ui->source_button ||
             obj == m_ui->concat_button || obj == m_ui->ocr_button){
             m_prompt->hidePrompt();
-            setHoverStyle(m_ui->latex_button, "LaTex");
-            setHoverStyle(m_ui->ocr_button, "OCR");
-            setHoverStyle(m_ui->code_button, "code");
-            setHoverStyle(m_ui->concat_button, "layout");
-            setHoverStyle(m_ui->setting_button, "adjust");
-            setHoverStyle(m_ui->source_button, "picture");
+            setBtnStyle(m_ui->latex_button, "LaTex");
+            setBtnStyle(m_ui->ocr_button, "OCR");
+            setBtnStyle(m_ui->code_button, "code");
+            setBtnStyle(m_ui->concat_button, "layout");
+            setBtnStyle(m_ui->setting_button, "adjust");
+            setBtnStyle(m_ui->source_button, "picture");
             return true;
         }
     }
@@ -193,6 +219,10 @@ void MainWindow::setupHotKeyConfig(){
     m_ui->exit_button->setShortcut(QKeySequence(val == EMPTY_STRING ? "" : val));
     val = m_xml_controller.get("Config.HotKey.Save");
     m_ui->save_button->setShortcut(QKeySequence(val == EMPTY_STRING ? "" : val));
+    val = m_xml_controller.get("Config.HotKey.LaTeX");
+    m_ui->latex_button->setShortcut(QKeySequence(val == EMPTY_STRING ? "" : val));
+    val = m_xml_controller.get("Config.HotKey.OCR");
+    m_ui->ocr_button->setShortcut(QKeySequence(val == EMPTY_STRING ? "" : val));
 }
 
 void MainWindow::initModules(){
@@ -207,6 +237,7 @@ void MainWindow::initModules(){
 
     m_smart_space.setModuleDock(m_module_dock);
     connect(this, SIGNAL(signalDockOperation(Operations)), &m_smart_space, SLOT(onOperation(Operations)));
+    connect(&m_smart_space, SIGNAL(signalState(bool)), this, SLOT(onSetHighLight(bool)));
 }
 
 void MainWindow::screenCapture(){
@@ -420,7 +451,7 @@ void MainWindow::onFinishCapture(DataPackage* data){
         connect(m_net_util, SIGNAL(signalConnStateChanged(bool)), this, SLOT(onSetFunctionActive(bool)));
     }
     m_prompt->hidePrompt();
-    const std::list<Operations> infer = m_smart_space.inference();
+    onSetHighLight(true);
     if (data){
         QRect screen = QGuiApplication::screens().at(data->screen_id)->geometry();
         QPoint ref_point = *data->ref_point + screen.topLeft();

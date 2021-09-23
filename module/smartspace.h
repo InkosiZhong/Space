@@ -22,6 +22,7 @@ public:
 
 signals:
     void signalOperation(Operations op);
+    void signalState(bool);
 
 public slots:
     void onOperation(Operations op);

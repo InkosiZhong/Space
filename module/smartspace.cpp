@@ -17,8 +17,11 @@ void SmartSpace::setModuleDock(ModuleDock* dock){
 }
 
 void SmartSpace::onOperation(Operations op){
-    if (!m_history_op.empty() && op == Clean)return;
-    if (!m_history_op.empty() && m_history_op.back() == Clean)m_history_op.clear();
+    if (!m_history_op.empty() && m_history_op.back() == Clean){
+        if (op == Clean)return;
+        emit signalState(false);
+        m_history_op.clear();
+    }
     m_history_op.emplace_back(op);
 }
 
@@ -28,10 +31,13 @@ void SmartSpace::AIInference(){
 
 const std::list<Operations>& SmartSpace::inference(){
     m_infer_op.clear();
-    switch (m_mode){
-    case SPACE_DISBALE: break;
-    case SPACE_AI: AIInference(); break;
-    case SPACE_IMITATE: m_infer_op = m_history_op; break;
+    if (!m_history_op.empty() && m_history_op.back() == Clean)
+    {
+        switch (m_mode){
+        case SPACE_DISBALE: break;
+        case SPACE_AI: AIInference(); break;
+        case SPACE_IMITATE: m_infer_op = m_history_op; break;
+        }
     }
     return m_infer_op;
 }

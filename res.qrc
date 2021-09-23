@@ -112,6 +112,27 @@
         <file>res/btn_icon/press/OCR.png</file>
         <file>res/btn_icon/unable/OCR.png</file>
         <file>res/btn_icon/OCR.svg</file>
+        <file>res/btn_icon/highlight/add.png</file>
+        <file>res/btn_icon/highlight/adjust.png</file>
+        <file>res/btn_icon/highlight/back.png</file>
+        <file>res/btn_icon/highlight/close.png</file>
+        <file>res/btn_icon/highlight/code.png</file>
+        <file>res/btn_icon/highlight/copy.png</file>
+        <file>res/btn_icon/highlight/download.png</file>
+        <file>res/btn_icon/highlight/edit.png</file>
+        <file>res/btn_icon/highlight/export.png</file>
+        <file>res/btn_icon/highlight/favorite.png</file>
+        <file>res/btn_icon/highlight/forward.png</file>
+        <file>res/btn_icon/highlight/LaTex.png</file>
+        <file>res/btn_icon/highlight/layout.png</file>
+        <file>res/btn_icon/highlight/more.png</file>
+        <file>res/btn_icon/highlight/OCR.png</file>
+        <file>res/btn_icon/highlight/picture.png</file>
+        <file>res/btn_icon/highlight/pin.png</file>
+        <file>res/btn_icon/highlight/refresh.png</file>
+        <file>res/btn_icon/highlight/scanning.png</file>
+        <file>res/btn_icon/highlight/search.png</file>
+        <file>res/btn_icon/highlight/select.png</file>
     </qresource>
     <qresource prefix="/bg">
         <file>res/bg.png</file>

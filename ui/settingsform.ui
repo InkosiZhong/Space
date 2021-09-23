@@ -28,7 +28,7 @@
    <item>
     <widget class="QTabWidget" name="setting_tabs">
      <property name="currentIndex">
-      <number>0</number>
+      <number>2</number>
      </property>
      <widget class="QWidget" name="general_tab">
       <attribute name="title">
@@ -466,7 +466,7 @@
       <attribute name="title">
        <string>热键</string>
       </attribute>
-      <layout class="QVBoxLayout" name="verticalLayout_3" stretch="1,1,1,1,1,0">
+      <layout class="QVBoxLayout" name="verticalLayout_3" stretch="1,1,1,1,1,1,1,0">
        <property name="leftMargin">
         <number>30</number>
        </property>
@@ -591,6 +591,52 @@
          </item>
          <item>
           <widget class="SingleKeySequenceEdit" name="cancel_edit"/>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_12">
+         <item>
+          <widget class="QLabel" name="label_10">
+           <property name="minimumSize">
+            <size>
+             <width>100</width>
+             <height>0</height>
+            </size>
+           </property>
+           <property name="text">
+            <string>公式提取</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="SingleKeySequenceEdit" name="latex_edit"/>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_21">
+         <item>
+          <widget class="QLabel" name="label_15">
+           <property name="minimumSize">
+            <size>
+             <width>100</width>
+             <height>0</height>
+            </size>
+           </property>
+           <property name="text">
+            <string>OCR</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="SingleKeySequenceEdit" name="ocr_edit"/>
          </item>
         </layout>
        </item>
