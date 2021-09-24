@@ -231,12 +231,14 @@ void MainWindow::initModules(){
     connect(m_module_dock, SIGNAL(signalSendMap(QPixmap*)), this, SLOT(onReceiveMap(QPixmap*)));
     connect(m_module_dock, SIGNAL(signalSendFormula(LatexInfoPack*)), this, SLOT(onReceiveFormula(LatexInfoPack*)));
     connect(m_module_dock, SIGNAL(signalSendOCR(OCRInfoPack*)), this, SLOT(onReceiveOCR(OCRInfoPack*)));
+    dockThread.start();
 
     m_smart_space.setModuleDock(m_module_dock);
     m_smart_space.moveToThread(&spaceThread);
     connect(this, SIGNAL(signalSetSrc(QPixmap*)), &m_smart_space, SLOT(AIInference(QPixmap*)));
     connect(this, SIGNAL(signalDockOperation(Operations)), &m_smart_space, SLOT(onOperation(Operations)));
     connect(&m_smart_space, SIGNAL(signalState(bool)), this, SLOT(onSetHighLight(bool)));
+    spaceThread.start();
 }
 
 void MainWindow::screenCapture(){
@@ -469,8 +471,6 @@ void MainWindow::onFinishCapture(DataPackage* data){
         activePromptDock(&ref_point);
 
         if (data->src){
-            dockThread.start();
-            spaceThread.start();
             emit signalSetSrc(data->src);
         }
     }

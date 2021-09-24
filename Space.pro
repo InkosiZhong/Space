@@ -68,6 +68,10 @@ QMAKE_CFLAGS += /utf-8
 QMAKE_CXXFLAGS += /utf-8
 }
 
+macx:{
+QMAKE_INFO_PLIST = platform/Info.plist
+}
+
 # opencv 4.5.2
 macx:{
 INCLUDEPATH += $$PWD/opencv/include/opencv4 \
