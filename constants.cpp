@@ -28,8 +28,8 @@ QString level_stylesheet[3] = {
     "background-color:rgb(255, 0, 80); color:rgb(255, 255, 255)"
 };
 
-QString ocr_area_stylesheet[2] = {
-    "QCheckBox::indicator{ \
+QString ocr_area_stylesheet[3][2] = {
+    {"QCheckBox::indicator{ \
          width: 0px \
      } \
      QCheckBox{ \
@@ -42,7 +42,35 @@ QString ocr_area_stylesheet[2] = {
      QCheckBox{ \
          background-color: rgba(105, 195, 146, 0.4); \
          border: 1px solid rgb(105, 195, 146); \
-     }"
+     }"},
+     {"QCheckBox::indicator{ \
+         width: 0px \
+     } \
+     QCheckBox{ \
+         background-color: rgba(105, 195, 146, 0); \
+         border: 1px solid rgb(105, 195, 146); \
+     }",
+    "QCheckBox::indicator{ \
+         width: 0px \
+     } \
+     QCheckBox{ \
+         background-color: rgba(105, 195, 146, 0.4); \
+         border: 1px solid rgb(105, 195, 146); \
+     }"},
+     {"QCheckBox::indicator{ \
+         width: 0px \
+     } \
+     QCheckBox{ \
+         background-color: rgba(105, 195, 146, 0); \
+         border: 2px solid rgb(105, 195, 146); \
+     }",
+    "QCheckBox::indicator{ \
+         width: 0px \
+     } \
+     QCheckBox{ \
+         background-color: rgba(105, 195, 146, 0.4); \
+         border: 2px solid rgb(105, 195, 146); \
+     }"}
 };
 
 enum CaptureState;
@@ -69,3 +97,5 @@ const float LATEX_SIZE_PROP_THREAD = 5;
 const float OCR_DENSITY_THREAD = 0.5;
 
 enum Performance;
+
+enum CoarseGrained;

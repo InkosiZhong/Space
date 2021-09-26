@@ -24,16 +24,26 @@ ExhibitForm::ExhibitForm(OCRInfoPack* ocr_pack):
     if (ocr_pack){
         std::list<OCRWords>::iterator iter = ocr_pack->ocr_result.begin();
         OCRWords* last = NULL;
+        std::list<OCRWords> para_list;
         while(iter != ocr_pack->ocr_result.end()){
-            OCRArea ocr_area(NULL, this);
-            ocr_areas.emplace_back(ocr_area);
-            ocr_areas.back().setup(&*iter, this);
-            connect(this, SIGNAL(signalSelecting(bool)), &ocr_areas.back(), SLOT(onSelecting(bool)));
+            OCRArea ocr_area(NULL, CG_LINE, this);
+            m_ocr_areas[1].emplace_back(ocr_area);
+            m_ocr_areas[1].back().setup(&*iter, CG_LINE, this);
+            connect(this, SIGNAL(signalSelecting(bool)), &m_ocr_areas[1].back(), SLOT(onSelecting(bool)));
             m_whole_ocr_result += iter->words;
+            para_list.emplace_back(*iter);
             last = &*iter;
             iter++;
-            if (iter != ocr_pack->ocr_result.end() &&
-                section(last, &*iter, m_width))m_whole_ocr_result += "\n";
+            if (iter == ocr_pack->ocr_result.end() ||
+                section(last, &*iter, m_width)){ // new para
+                m_whole_ocr_result += "\n";
+                OCRArea para_area(NULL, CG_PARA, this);
+                m_ocr_areas[2].emplace_back(para_area);
+                m_ocr_areas[2].back().setup(para_list, CG_PARA, this);
+                connect(this, SIGNAL(signalSelecting(bool)), &m_ocr_areas[2].back(), SLOT(onSelecting(bool)));
+                m_ocr_areas[2].back().hide();
+                para_list.clear();
+            }
         }
     }
 }
@@ -52,11 +62,11 @@ void ExhibitForm::closeEvent(QCloseEvent *event)
 
 void ExhibitForm::on_copy_button_clicked()
 {
-    std::list<OCRArea>::iterator iter = ocr_areas.begin();
+    std::list<OCRArea>::iterator iter = m_ocr_areas[m_coarse].begin();
     OCRArea* last_area = NULL;
     OCRWords words, last;
     QString ocr_result = "";
-    while(iter != ocr_areas.end()){
+    while(iter != m_ocr_areas[m_coarse].end()){
         if (iter->isChecked()){
             if (last_area){
                 last = last_area->getWordsWithLocation();
@@ -83,5 +93,29 @@ void ExhibitForm::keyReleaseEvent(QKeyEvent *event){
     if (event->key() == Qt::Key_Control){
         emit signalSelecting(false);
     }
+}
+
+void ExhibitForm::showCurrentCoarse(){
+    for (CoarseGrained i = CG_WORD; i <= CG_PARA; i = CoarseGrained(i + 1)){
+        std::list<OCRArea>::iterator iter = m_ocr_areas[i].begin();
+        while (iter != m_ocr_areas[i].end()){
+            iter->setVisible(i == m_coarse);
+            iter++;
+        }
+    }
+}
+
+
+void ExhibitForm::on_next_pushButton_clicked()
+{
+    m_coarse = CoarseGrained((m_coarse + 1) % 3);
+    showCurrentCoarse();
+}
+
+
+void ExhibitForm::on_prev_pushButton_clicked()
+{
+    m_coarse = CoarseGrained((m_coarse + 2) % 3);
+    showCurrentCoarse();
 }
 

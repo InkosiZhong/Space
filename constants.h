@@ -19,7 +19,7 @@ extern QString level_prefix[3];
 
 extern QString level_stylesheet[3];
 
-extern QString ocr_area_stylesheet[2];
+extern QString ocr_area_stylesheet[3][2];
 
 extern const QColor color_shadow;
 extern const QColor color_blue_gray;
@@ -99,6 +99,12 @@ enum Performance {
     PERFORM_BALANCE,
     PERFORM_SPEED,
     PERFORM_ADAPTIVE
+};
+
+enum CoarseGrained{
+    CG_WORD,
+    CG_LINE,
+    CG_PARA
 };
 
 #endif // CONSTANTS_H

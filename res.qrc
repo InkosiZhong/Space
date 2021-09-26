@@ -133,6 +133,10 @@
         <file>res/btn_icon/highlight/scanning.png</file>
         <file>res/btn_icon/highlight/search.png</file>
         <file>res/btn_icon/highlight/select.png</file>
+        <file>res/btn_icon/default/last.png</file>
+        <file>res/btn_icon/default/next.png</file>
+        <file>res/btn_icon/last.svg</file>
+        <file>res/btn_icon/next.svg</file>
     </qresource>
     <qresource prefix="/bg">
         <file>res/bg.png</file>

@@ -489,6 +489,7 @@ void MainWindow::onExitCapture(){
     activeToolsDock(NULL);
     m_prompt->hidePrompt();
     m_capturing = false;
+    emit signalCompleteCature();
     if (m_capturer && m_perform_level < PERFORM_SPEED){
         m_capturer->close();
         m_capturer = NULL;

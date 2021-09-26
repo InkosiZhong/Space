@@ -7,16 +7,19 @@
 #include "module/ocrhandler.h"
 #include "utils/util.h"
 #include "constants.h"
+#include <list>
 
 class OCRArea : public QCheckBox
 {
     Q_OBJECT
 public:
-    explicit OCRArea(const OCRWords* words = nullptr, QWidget *parent = nullptr);
+    explicit OCRArea(const OCRWords* words = nullptr, CoarseGrained cg = CG_LINE, QWidget *parent = nullptr);
 
     OCRArea(const OCRArea& area);
 
-    void setup(const OCRWords* words = nullptr, QWidget *parent = nullptr);
+    void setup(const OCRWords* words = nullptr, CoarseGrained cg = CG_LINE, QWidget *parent = nullptr);
+
+    void setup(const std::list<OCRWords>& para, CoarseGrained cg = CG_PARA, QWidget *parent = nullptr);
 
     void mousePressEvent(QMouseEvent* e);
 
@@ -35,6 +38,7 @@ public slots:
 private:
     OCRWords m_words;
     bool m_selecting = false;
+    CoarseGrained m_coarse;
 
 };
 
