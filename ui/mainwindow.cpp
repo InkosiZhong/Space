@@ -56,7 +56,7 @@ void MainWindow::initConfig(){
     m_xml_controller.append("Config.General.Performance", QString::number(PERFORM_LIGHTWEIGHT));
 
     /*Advance*/
-    m_xml_controller.append("Config.Advaznce.LuminanceThreshold", "127");
+    m_xml_controller.append("Config.Advance.LuminanceThreshold", "127");
     m_xml_controller.append("Config.Advance.MathpixID", "");
     m_xml_controller.append("Config.Advance.MathpixKEY", "");
     m_xml_controller.append("Config.Advance.OCRApiKEY", "");
@@ -196,6 +196,7 @@ void MainWindow::setupGeneralConfig(){
 
 void MainWindow::setupAdvanceConfig(){
     QString lu = m_xml_controller.get("Config.Advance.LuminanceThreshold");
+    qDebug() << lu;
     QString mathpix_id = m_xml_controller.get("Config.Advance.MathpixID");
     QString mathpix_key = m_xml_controller.get("Config.Advance.MathpixKEY");
     QString ocr_api_key = m_xml_controller.get("Config.Advance.OCRApiKEY");
